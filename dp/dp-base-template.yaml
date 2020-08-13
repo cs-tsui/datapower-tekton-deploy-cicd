@@ -1,7 +1,7 @@
 apiVersion: datapower.ibm.com/v1beta1
 kind: DataPowerService
 metadata:
-  name: $(RELEASE_NAME)
+  name: $RELEASE_NAME
   namespace: dp-test
 spec:
   license:
@@ -33,11 +33,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: $(RELEASE_NAME)-web-svc
+  name: $RELEASE_NAME-web-svc
   namespace: dp-test
 spec:
   selector:
-    app.kubernetes.io/instance: dp-test-$(RELEASE_NAME)
+    app.kubernetes.io/instance: dp-test-$RELEASE_NAME
   ports:
     - protocol: TCP
       port: 9090
@@ -45,12 +45,12 @@ spec:
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: $(RELEASE_NAME)-web
+  name: $RELEASE_NAME-web
   namespace: dp-test
 spec:
   to:
     kind: Service
-    name: $(RELEASE_NAME)-web-svc
+    name: $RELEASE_NAME-web-svc
     weight: 100
   port:
     targetPort: 9090
