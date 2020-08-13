@@ -1,2 +1,3 @@
-# dp-tekton-deploy
-DP V10 Deploy
+## Datapower V10 Tekton Deployment
+
+Tekton assets for deploying an instance of the operator based DataPower V10.
