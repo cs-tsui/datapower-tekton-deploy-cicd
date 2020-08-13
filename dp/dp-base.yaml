@@ -37,7 +37,7 @@ metadata:
   namespace: dp-test
 spec:
   selector:
-    app.kubernetes.io/instance: cp4i-dp-pipeline
+    app.kubernetes.io/instance: dp-test-dp-pipeline
   ports:
     - protocol: TCP
       port: 9090
@@ -50,7 +50,7 @@ metadata:
 spec:
   to:
     kind: Service
-    name: dp-1-web-svc
+    name: dp-pipeline-web-svc
     weight: 100
   port:
     targetPort: 9090
