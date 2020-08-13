@@ -1,0 +1,39 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: deploy-dp-pipeline
+spec:
+  params:
+    - name: RELEASE_NAME
+      type: string
+      default: dp-release
+    - name: TARGET_NAMESPACE
+      type: string
+      default: dp-test
+    - name: DP_WORKSPACE_DIR
+      description: Location containing configurations
+      type: string
+      default: dp
+    - name: PVC_SC
+      type: string
+      default: ibmc-block-gold
+  resources:
+    - name: git-input-source
+      type: git
+  tasks:
+    - name: deploy-capability
+      taskRef:
+        name: deploy-dp
+      params:
+        - name: RELEASE_NAME
+          value: $(params.RELEASE_NAME)
+        - name: TARGET_NAMESPACE
+          value: $(params.TARGET_NAMESPACE)
+        - name: DP_WORKSPACE_DIR
+          value: $(params.DP_WORKSPACE_DIR)
+        - name: PVC_SC
+          value: $(params.PVC_SC)          
+      resources:
+        inputs:
+          - name: input-source
+            resource: git-input-source

@@ -1,0 +1,56 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: deploy-dp
+spec:
+  params:
+    - name: RELEASE_NAME
+      type: string
+      default: dp-release
+    - name: TARGET_NAMESPACE
+      type: string
+      default: dp-test
+    - name: DP_WORKSPACE_DIR
+      description: Location containing configurations
+      type: string
+      default: dp
+    - name: PVC_SC
+      type: string
+      default: ibmc-block-gold
+  resources:
+    inputs:
+      - name: input-source
+        type: git
+  steps:
+    - name: create-cm-apply-params
+      image: popcor255/kubectl
+      workingDir: /workspace/input-source/$(params.DP_WORKSPACE_DIR)
+      env:
+        - name: RELEASE_NAME
+          value: $(params.RELEASE_NAME) 
+        - name: TARGET_NAMESPACE
+          value: $(params.TARGET_NAMESPACE)
+        # - name: PVC_SC
+        #   value: $(params.PVC_SC)
+      script: |
+          set -e
+          # Grab the Git commit tag
+          TAG="$(cat ../.git/FETCH_HEAD | awk '{print substr($1,0,7)}')"
+          
+          # Print env for debugging
+          env
+
+          # env var substitution
+          envsubst < dp-base-template.yaml > dp-base-generated.yaml
+
+          # Apply the CRD
+          cat dp-base-generated.yaml
+          kubectl apply -f dp-base-generated.yaml --wait=true
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - mountPath: /var/lib/containers
+          name: varlibcontainers
+  volumes:
+    - emptyDir: {}
+      name: varlibcontainers
