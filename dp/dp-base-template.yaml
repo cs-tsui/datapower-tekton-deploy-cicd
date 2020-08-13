@@ -11,7 +11,7 @@ spec:
     limits:
       memory: 4Gi
     requests:
-      cpu: 2
+      cpu: 4
       memory: 4Gi
   domains:
   - name: "default"
