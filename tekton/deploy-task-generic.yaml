@@ -41,10 +41,10 @@ spec:
           env
 
           # Create config maps and secrets
-          kubectl create -f admin-credentials.yaml -n $TARGET_NAMESPACE
+          kubectl apply -f admin-credentials.yaml -n $TARGET_NAMESPACE
 
           # Create config maps needed for each cfg file in config directory
-          find . -name '*.cfg' -exec bash -c 'FILE_VAR=$(basename {} .cfg); echo $FILE_VAR-$RELEASE_NAME; kubectl create configmap $FILE_VAR-$RELEASE_NAME-cfg --from-file={}' \;
+          find . -name '*.cfg' -exec bash -c 'FILE_VAR=$(basename {} .cfg); echo $FILE_VAR-$RELEASE_NAME; kubectl create configmap $FILE_VAR-$RELEASE_NAME-cfg --from-file={} --quiet' \;
 
           # env var substitution
           envsubst < dp-template.yaml > dp-generated.yaml
