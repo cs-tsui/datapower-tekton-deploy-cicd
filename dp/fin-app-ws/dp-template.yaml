@@ -28,7 +28,7 @@ spec:
   users:
     - accessLevel: privileged
       name: admin
-      passwordSecret: $PASSWORD_SECRET
+      passwordSecret: admin-credentials
   version: 10.0.0
   replicas: 1
 ---

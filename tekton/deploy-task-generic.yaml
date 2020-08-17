@@ -44,7 +44,7 @@ spec:
           kubectl apply -f admin-credentials.yaml -n $TARGET_NAMESPACE
 
           # Create config maps needed for each cfg file in config directory
-          find . -name '*.cfg' -exec bash -c 'FILE_VAR=$(basename {} .cfg); echo $FILE_VAR-$RELEASE_NAME; kubectl delete configmap $FILE_VAR-$RELEASE_NAME-cfg --ignore-errors=true; kubectl create configmap $FILE_VAR-$RELEASE_NAME-cfg --from-file={}' \;
+          find . -name '*.cfg' -exec sh -c 'FILE_VAR=$(basename {} .cfg); echo $FILE_VAR-$RELEASE_NAME; kubectl delete configmap $FILE_VAR-$RELEASE_NAME-cfg --ignore-not-found=true; kubectl create configmap $FILE_VAR-$RELEASE_NAME-cfg --from-file={}' \;
 
           # env var substitution
           envsubst < dp-template.yaml > dp-generated.yaml
