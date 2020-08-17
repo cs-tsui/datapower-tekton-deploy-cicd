@@ -23,7 +23,7 @@ spec:
   tasks:
     - name: deploy-capability
       taskRef:
-        name: deploy-dp
+        name: deploy-dp-generic
       params:
         - name: RELEASE_NAME
           value: $(params.RELEASE_NAME)

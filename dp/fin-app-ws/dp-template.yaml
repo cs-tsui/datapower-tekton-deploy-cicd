@@ -17,11 +17,11 @@ spec:
   - name: "default"
     dpApp:
       config:
-      - "auto-startup-cfg"
+      - "auto-startup-$RELEASE_NAME-cfg"
   - name: "fin-app"
     dpApp:
       config:
-      - "fin-app-cfg"
+      - "fin-app-$RELEASE_NAME-cfg"
   env:
   - name: DATAPOWER_LOG_LEVEL
     value: "5"

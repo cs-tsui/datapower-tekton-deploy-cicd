@@ -1,0 +1,62 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: deploy-dp-generic
+spec:
+  params:
+    - name: RELEASE_NAME
+      type: string
+      default: dp-release
+    - name: TARGET_NAMESPACE
+      type: string
+      default: dp-test
+    - name: DP_WORKSPACE_DIR
+      description: Location containing configurations
+      type: string
+      default: dp
+    - name: PVC_SC
+      type: string
+      default: ibmc-block-gold
+  resources:
+    inputs:
+      - name: input-source
+        type: git
+  steps:
+    - name: create-cm-apply-params
+      image: popcor255/kubectl
+      workingDir: /workspace/input-source/$(params.DP_WORKSPACE_DIR)
+      env:
+        - name: RELEASE_NAME
+          value: $(params.RELEASE_NAME) 
+        - name: TARGET_NAMESPACE
+          value: $(params.TARGET_NAMESPACE)
+        # - name: PVC_SC
+        #   value: $(params.PVC_SC)
+      script: |
+          set -e
+          # Grab the Git commit tag
+          TAG="$(cat ../.git/FETCH_HEAD | awk '{print substr($1,0,7)}')"
+          
+          # Print env for debugging
+          env
+
+          # Create config maps and secrets
+          oc create -f admin-credentials.yaml -n $TARGET_NAMESPACE
+
+          # Create config maps needed for each cfg file in config directory
+          find . -name '*.cfg' -exec bash -c 'FILE_VAR=$(basename {} .cfg); echo $FILE_VAR-$RELEASE_NAME; oc create configmap $FILE_VAR-$RELEASE_NAME-cfg --from-file={}' \;
+
+          # env var substitution
+          envsubst < dp-template.yaml > dp-generated.yaml
+
+          # Apply the CRD
+          cat dp-generated.yaml
+          kubectl apply -f dp-generated.yaml --wait=true
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - mountPath: /var/lib/containers
+          name: varlibcontainers
+  volumes:
+    - emptyDir: {}
+      name: varlibcontainers
