@@ -13,7 +13,7 @@ spec:
     - name: DP_WORKSPACE_DIR
       description: Location containing configurations
       type: string
-      default: dp
+      default: dp/basic
     - name: PVC_SC
       type: string
       default: ibmc-block-gold

@@ -19,4 +19,3 @@ spec:
     - name: git-input-source
       resourceRef:
         name: git-repo
-  timeout: 1h0m0s
