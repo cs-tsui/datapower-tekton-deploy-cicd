@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
   name: deploy-dp-generic
+  # namespace: dp-pipeline
 spec:
   params:
     - name: RELEASE_NAME
@@ -39,9 +40,6 @@ spec:
           
           # Print env for debugging
           env
-
-          # Create config maps and secrets
-          kubectl apply -f admin-credentials.yaml -n $TARGET_NAMESPACE
 
           # Create config maps needed for each cfg file in config directory
           find . -name '*.cfg' -exec sh -c 'FILE_VAR=$(basename {} .cfg); \
