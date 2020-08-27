@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: dp-pipe-delpy-
+  # namespace: dp-pipeline
+spec:
+  params:
+    - name: RELEASE_NAME
+      value: dp-rel-ws-again
+    - name: TARGET_NAMESPACE
+      value: cp4i
+    - name: DP_WORKSPACE_DIR
+      value: dp/fin-app-ws
+    - name: PVC_SC
+      value: ibmc-block-gold
+  pipelineRef:
+    name: deploy-dp-pipeline
+  resources:
+    - name: git-input-source
+      resourceRef:
+        name: git-repo
+  timeout: 1h0m0s
