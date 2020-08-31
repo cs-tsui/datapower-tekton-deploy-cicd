@@ -78,6 +78,6 @@ spec:
   port:
     targetPort: 7080
   tls:
-    termination: passthrough
+    termination: edge
     insecureEdgeTerminationPolicy: Redirect
   wildcardPolicy: None
