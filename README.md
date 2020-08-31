@@ -8,10 +8,15 @@ Tekton assets for deploying an instance of the operator based DataPower V10.
 # Log into Openshift
 
 # ./pipeline-setup.sh <pipeline-sa-name> <pipeline-namespace> <datapower deployment-target-ns>
-./pipeline-setup.sh dp-deploy-sa dp-pipeline cp4i
+./pipeline-setup.sh dp-deploy-sa dp-pipeline dp
 
 
-# Start a pipeline run to deploy and pass in
-tkn pipeline start deploy-dp-pipeline --serviceaccount dp-deploy-sa --param TARGET_NAMESPACE=dp --param RELEASE_NAME=dp-rel-ws --param DP_WORKSPACE_DIR='dp/fin-app-ws' --resource git-input-source=git-repo
-
+# Start a pipeline run to deploy and pass in custom configuration parameters 
+tkn pipeline start deploy-dp-pipeline \
+--serviceaccount dp-deploy-sa \
+--param TARGET_NAMESPACE=dp \
+--param RELEASE_NAME=dp-basic \
+--param DP_WORKSPACE_DIR='dp/basic' \
+--resource git-input-source=git-repo \
+-n dp-pipeline
 ```
