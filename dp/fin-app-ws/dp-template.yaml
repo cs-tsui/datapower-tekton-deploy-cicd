@@ -43,6 +43,10 @@ spec:
   ports:
     - protocol: TCP
       port: 9090
+      name: web-mgmt
+    - protocol: TCP
+      port: 7080
+      name: web-socket-svc
 ---
 kind: Route
 apiVersion: route.openshift.io/v1
