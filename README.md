@@ -1,5 +1,4 @@
 ## Datapower V10 Tekton Deployment
-
 Tekton assets for deploying an instance of the operator based DataPower V10.
 
 
@@ -12,7 +11,7 @@ Tekton assets for deploying an instance of the operator based DataPower V10.
 ./pipeline-setup.sh dp-deploy-sa dp-pipeline cp4i
 
 
-# Start a pipeline run to deploy
+# Start a pipeline run to deploy and pass in
+tkn pipeline start deploy-dp-pipeline --serviceaccount dp-deploy-sa --param TARGET_NAMESPACE=dp --param RELEASE_NAME=dp-rel-ws --param DP_WORKSPACE_DIR='dp/fin-app-ws' --resource git-input-source=git-repo
 
-tkn pipeline start deploy-dp-pipeline --serviceaccount dp-deploy-sa --param TARGET_NAMESPACE=cp4i --param RELEASE_NAME=dp-rel-ws --param DP_WORKSPACE_DIR='dp/fin-app-ws' --resource git-input-source=git-repo
 ```
