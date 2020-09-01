@@ -81,6 +81,7 @@ spec:
     insecureEdgeTerminationPolicy: Redirect
   wildcardPolicy: None
 ---
+### Calculator HTTPS route
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
@@ -98,6 +99,7 @@ spec:
     insecureEdgeTerminationPolicy: Redirect
   wildcardPolicy: None
 ---
+### Calculator HTTP route
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
@@ -110,7 +112,3 @@ spec:
     weight: 100
   port:
     targetPort: 8081
-  tls:
-    termination: passthrough
-    insecureEdgeTerminationPolicy: Redirect
-  wildcardPolicy: None
