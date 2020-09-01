@@ -56,7 +56,7 @@ spec:
             FILE_NAME=$(echo "$FILE_NAME-$RELEASE_NAME-local" | tr "[:upper:]" "[:lower:]"); \
             echo $FILE_NAME; \
             tar --directory={} -czvf $FILE_NAME.tar.gz .;
-            kubectl delete configmap $FILE_NAME --ignore-not-found=true -n $TARGET_NAMESPACE;; \
+            kubectl delete configmap $FILE_NAME --ignore-not-found=true -n $TARGET_NAMESPACE; \
             kubectl create configmap $FILE_NAME --from-file=$FILE_NAME.tar.gz -n $TARGET_NAMESPACE;' \;
           fi
 

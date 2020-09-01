@@ -49,12 +49,18 @@ spec:
   selector:
     app.kubernetes.io/instance: $TARGET_NAMESPACE-$RELEASE_NAME
   ports:
-    - protocol: TCP
+    - name: dpconsole
+      protocol: TCP
       port: 9090
-      name: web-mgmt
-    - protocol: TCP
-      port: 7080
-      name: web-socket-svc
+      targetPort: 9090
+    - name: calchttp
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: calchttps
+      protocol: TCP
+      port: 7043
+      targetPort: 7043
 ---
 kind: Route
 apiVersion: route.openshift.io/v1
@@ -87,6 +93,23 @@ spec:
     weight: 100
   port:
     targetPort: 7043
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: $RELEASE_NAME-calc-http
+  namespace: $TARGET_NAMESPACE
+spec:
+  to:
+    kind: Service
+    name: $RELEASE_NAME-web-svc
+    weight: 100
+  port:
+    targetPort: 8081
   tls:
     termination: passthrough
     insecureEdgeTerminationPolicy: Redirect
