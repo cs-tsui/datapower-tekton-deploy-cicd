@@ -1,0 +1,93 @@
+apiVersion: datapower.ibm.com/v1beta1
+kind: DataPowerService
+metadata:
+  name: $RELEASE_NAME
+  namespace: $TARGET_NAMESPACE
+spec:
+  license:
+    accept: true
+    use: production
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      cpu: 4
+      memory: 4Gi
+  domains:
+  - name: "default"
+    dpApp:
+      config:
+      - "auto-startup-$RELEASE_NAME-cfg"
+      - "web-enable-$RELEASE_NAME-cfg"
+  - name: "RRdomain"
+    certs:
+      - certType: usrcerts
+        secret: mycerts
+    dpApp:
+      config:
+        - "rrdomain-$RELEASE_NAME-cfg"
+      local:
+        - rrdomain-$RELEASE_NAME-local
+  env:
+  - name: DATAPOWER_LOG_LEVEL
+    value: "4"
+  users:
+    - accessLevel: privileged
+      name: admin
+      passwordSecret: dp-admin-credentials
+  version: 10.0.0
+  replicas: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $RELEASE_NAME-web-svc
+  namespace: $TARGET_NAMESPACE
+  labels:
+    dp-pipeline: $RELEASE_NAME
+spec:
+  selector:
+    app.kubernetes.io/instance: $TARGET_NAMESPACE-$RELEASE_NAME
+  ports:
+    - protocol: TCP
+      port: 9090
+      name: web-mgmt
+    - protocol: TCP
+      port: 7080
+      name: web-socket-svc
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: $RELEASE_NAME-web
+  namespace: $TARGET_NAMESPACE
+  labels:
+    dp-pipeline: $RELEASE_NAME
+spec:
+  to:
+    kind: Service
+    name: $RELEASE_NAME-web-svc
+    weight: 100
+  port:
+    targetPort: 9090
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: $RELEASE_NAME-calc-https
+  namespace: $TARGET_NAMESPACE
+spec:
+  to:
+    kind: Service
+    name: $RELEASE_NAME-web-svc
+    weight: 100
+  port:
+    targetPort: 7043
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

@@ -42,9 +42,21 @@ spec:
           env
 
           # Create config maps needed for each cfg file in config directory
+          # Passing in .cfg as argument to basename will only get files ending in .cfg
           find . -name '*.cfg' -exec sh -c 'FILE_VAR=$(basename {} .cfg); \
-          echo $FILE_VAR-$RELEASE_NAME; kubectl delete configmap $FILE_VAR-$RELEASE_NAME-cfg --ignore-not-found=true -n $TARGET_NAMESPACE; \
-          kubectl create configmap $FILE_VAR-$RELEASE_NAME-cfg --from-file={} -n $TARGET_NAMESPACE' \;
+          FILE_VAR=$(echo "$FILE_VAR-$RELEASE_NAME" | tr "[:upper:]" "[:lower:]"); \
+          echo $FILE_VAR-$RELEASE_NAME; \
+          kubectl delete configmap $FILE_VAR-cfg --ignore-not-found=true -n $TARGET_NAMESPACE; \
+          kubectl create configmap $FILE_VAR-cfg --from-file={} -n $TARGET_NAMESPACE' \;
+
+
+          # Create config maps from local directory, and lowercase the directories
+          find ./local/* -type d -exec sh -c 'FILE_NAME=$(basename {}); \
+          FILE_NAME=$(echo "$FILE_NAME-$RELEASE_NAME-local" | tr "[:upper:]" "[:lower:]"); \
+          echo $FILE_NAME; \
+          tar --directory={} -czvf $FILE_NAME.tar.gz .;
+          kubectl delete configmap $FILE_NAME --ignore-not-found=true -n $TARGET_NAMESPACE;; \
+          kubectl create configmap $FILE_NAME --from-file=$FILE_NAME.tar.gz -n $TARGET_NAMESPACE;' \;
 
           # env var substitution
           envsubst < dp-template.yaml > dp-generated.yaml
