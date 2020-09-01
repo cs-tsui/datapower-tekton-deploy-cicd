@@ -2,15 +2,37 @@
 Tekton assets for deploying an instance of the operator based DataPower V10.
 
 
-### Run
+## Setup Pipeline
+
+* Log into Openshift as user with ability to create related pipeline resources (admin user)
+
+* Edit pipeline-setup.sh and fill in required variables
+    ```
+    ...
+    # Insert your Git Access Token below
+    GIT_TOKEN=<git-token>
+
+    # Insert your Git UserName here
+    GIT_USERNAME=dp-build-bot
+
+    # Insert DP Password here
+    DP_PASSWORD=<admin-dp-pw>
+    ...
+    ```
+
+* Change the url in "git-repo-resource.yaml" in tekton directory to point to your own repo
+
+* Run the setup script. This creates a new service-account and namespace for the pipeline to run. Deployment target namespace should already exist with datapower operator installed.
+    ```
+    # The arguments needed:
+    ./pipeline-setup.sh <pipeline-serviceaccount-name> <pipeline-namespace> <datapower-deployment-target-ns>
+    
+    ./pipeline-setup.sh dp-deploy-sa dp-pipeline dp
+    ```
+
+## Run
 
 ```
-# Log into Openshift
-
-# ./pipeline-setup.sh <pipeline-sa-name> <pipeline-namespace> <datapower deployment-target-ns>
-./pipeline-setup.sh dp-deploy-sa dp-pipeline dp
-
-
 # Start a pipeline run to deploy and pass in custom configuration parameters 
 tkn pipeline start deploy-dp-pipeline \
 --serviceaccount dp-deploy-sa \

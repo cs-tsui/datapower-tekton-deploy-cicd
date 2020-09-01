@@ -1,7 +1,17 @@
-#! /bin/bash
+#!/bin/bash
 
 # Example call
+# ./pipeline-setup.sh <choose-service-account-name> <pipeline-namespace> <dp-target-namespace>
 # ./pipeline-setup.sh dp-deploy-sa dp-pipeline cp4i
+
+# Make sure arguments exist
+if [[ -z "$1" ]] || [[ -z "$2" ]] || [[ -z "$3" ]]; then
+    echo "Not enough arguments supplied."
+    echo './pipeline-setup.sh <choose-service-account-name> <pipeline-namespace> <dp-target-namespace>'
+    echo "The target deployment namespaces should have the DataPower Operator already installed."
+    echo ""
+    exit 1
+fi
 
 PIPELINE_SA=$1
 PIPELINE_NS=$2
