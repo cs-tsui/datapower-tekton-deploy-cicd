@@ -14,17 +14,17 @@ spec:
       cpu: 4
       memory: 4Gi
   domains:
-  - name: "default"
+  - name: 'default'
     dpApp:
       config:
-      - "auto-startup-$RELEASE_NAME-cfg"
-  - name: "fin-app"
+      - 'auto-startup-$RELEASE_NAME-cfg'
+  - name: 'fin-app'
     dpApp:
       config:
-      - "fin-app-$RELEASE_NAME-cfg"
+      - 'fin-app-$RELEASE_NAME-cfg'
   env:
   - name: DATAPOWER_LOG_LEVEL
-    value: "5"
+    value: '5'
   users:
     - accessLevel: privileged
       name: admin

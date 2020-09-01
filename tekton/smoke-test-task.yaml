@@ -20,7 +20,7 @@ spec:
       - name: input-source
         type: git
   steps:
-    - name: create-cm-apply-params
+    - name: run-smoke-test
       image: quay.io/openshift/origin-cli:latest
       workingDir: /workspace/input-source/$(params.DP_WORKSPACE_DIR)
       env:

@@ -14,13 +14,13 @@ spec:
       cpu: 4
       memory: 4Gi
   domains:
-  - name: "default"
+  - name: 'default'
     dpApp:
       config:
-      - "auto-startup-$RELEASE_NAME-cfg"
+      - 'auto-startup-$RELEASE_NAME-cfg'
   env:
   - name: DATAPOWER_LOG_LEVEL
-    value: "5"
+    value: '5'
   users:
     - accessLevel: privileged
       name: admin
