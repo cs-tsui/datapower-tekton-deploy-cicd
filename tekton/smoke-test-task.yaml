@@ -1,0 +1,48 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: dp-smoke-test
+  # namespace: dp-pipeline
+spec:
+  params:
+    - name: RELEASE_NAME
+      type: string
+      default: dp-release
+    - name: TARGET_NAMESPACE
+      type: string
+      default: dp-test
+    - name: DP_WORKSPACE_DIR
+      description: Location containing configurations
+      type: string
+      default: dp
+  resources:
+    inputs:
+      - name: input-source
+        type: git
+  steps:
+    - name: create-cm-apply-params
+      image: quay.io/openshift/origin-cli:latest
+      workingDir: /workspace/input-source/$(params.DP_WORKSPACE_DIR)
+      env:
+        - name: RELEASE_NAME
+          value: $(params.RELEASE_NAME) 
+        - name: TARGET_NAMESPACE
+          value: $(params.TARGET_NAMESPACE)
+      script: |
+          set -e
+
+          # Print env for debugging
+          env
+
+          READY_STATUS=$(oc get datapowerservice dp-with-storage -o jsonpath='{.status.conditions[0].type}')
+
+          if [ "$READY_STATUS" = "$Ready" ]; then
+              echo "DataPower Instance Ready."
+          else
+              echo "DataPower Instance NOT Ready."
+          fi
+
+
+          if [[ -e smoke-test.sh ]]; then
+            ./smoke-test.sh
+          fi

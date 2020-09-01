@@ -32,8 +32,24 @@ spec:
         - name: DP_WORKSPACE_DIR
           value: $(params.DP_WORKSPACE_DIR)
         - name: PVC_SC
-          value: $(params.PVC_SC)          
+          value: $(params.PVC_SC)
       resources:
         inputs:
           - name: input-source
             resource: git-input-source
+    - name: smoke-test
+      taskRef:
+        name: dp-smoke-test
+      params:
+        - name: RELEASE_NAME
+          value: $(params.RELEASE_NAME)
+        - name: TARGET_NAMESPACE
+          value: $(params.TARGET_NAMESPACE)
+        - name: DP_WORKSPACE_DIR
+          value: $(params.DP_WORKSPACE_DIR)
+      resources:
+        inputs:
+          - name: input-source
+            resource: git-input-source
+      runAfter:
+        - deploy-capability

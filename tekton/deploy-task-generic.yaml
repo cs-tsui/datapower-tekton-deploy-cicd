@@ -70,12 +70,3 @@ spec:
           echo ""
           cat dp-generated.yaml
           kubectl apply -f dp-generated.yaml --wait=true
-          
-      securityContext:
-        privileged: true
-      volumeMounts:
-        - mountPath: /var/lib/containers
-          name: varlibcontainers
-  volumes:
-    - emptyDir: {}
-      name: varlibcontainers
