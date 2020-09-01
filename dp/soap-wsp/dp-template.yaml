@@ -87,6 +87,8 @@ apiVersion: route.openshift.io/v1
 metadata:
   name: $RELEASE_NAME-calc-https
   namespace: $TARGET_NAMESPACE
+  labels:
+    dp-pipeline: $RELEASE_NAME
 spec:
   to:
     kind: Service
@@ -105,6 +107,8 @@ apiVersion: route.openshift.io/v1
 metadata:
   name: $RELEASE_NAME-calc-http
   namespace: $TARGET_NAMESPACE
+  labels:
+    dp-pipeline: $RELEASE_NAME
 spec:
   to:
     kind: Service

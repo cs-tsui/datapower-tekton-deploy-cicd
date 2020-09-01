@@ -24,7 +24,7 @@ spec:
         type: git
   steps:
     - name: create-cm-apply-params
-      image: popcor255/kubectl
+      image: quay.io/openshift/origin-cli:latest
       workingDir: /workspace/input-source/$(params.DP_WORKSPACE_DIR)
       env:
         - name: RELEASE_NAME
@@ -41,7 +41,9 @@ spec:
           # Print env for debugging
           env
 
-          # Create config maps needed for each cfg file in config directory
+          # Create config maps needed for each cfg file in config directory. Also 
+          # lower cases the configmap names
+
           # Passing in .cfg as argument to basename will only get files ending in .cfg
           find . -name '*.cfg' -exec sh -c 'FILE_VAR=$(basename {} .cfg); \
           FILE_VAR=$(echo "$FILE_VAR-$RELEASE_NAME" | tr "[:upper:]" "[:lower:]"); \
@@ -60,13 +62,14 @@ spec:
             kubectl create configmap $FILE_NAME --from-file=$FILE_NAME.tar.gz -n $TARGET_NAMESPACE;' \;
           fi
 
-
           # env var substitution
-          envsubst < dp-template.yaml > dp-generated.yaml
+          # envsubst < dp-template.yaml > dp-generated.yaml
+          eval "echo \"$(cat dp-template.yaml)\"" > dp-generated.yaml
 
           # Apply the CRD
           cat dp-generated.yaml
           kubectl apply -f dp-generated.yaml --wait=true
+          
       securityContext:
         privileged: true
       volumeMounts:
