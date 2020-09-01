@@ -51,12 +51,15 @@ spec:
 
 
           # Create config maps from local directory, and lowercase the directories
-          find ./local/* -type d -exec sh -c 'FILE_NAME=$(basename {}); \
-          FILE_NAME=$(echo "$FILE_NAME-$RELEASE_NAME-local" | tr "[:upper:]" "[:lower:]"); \
-          echo $FILE_NAME; \
-          tar --directory={} -czvf $FILE_NAME.tar.gz .;
-          kubectl delete configmap $FILE_NAME --ignore-not-found=true -n $TARGET_NAMESPACE;; \
-          kubectl create configmap $FILE_NAME --from-file=$FILE_NAME.tar.gz -n $TARGET_NAMESPACE;' \;
+          if [ -d "./local" ]; then
+            find ./local/* -type d -exec sh -c 'FILE_NAME=$(basename {}); \
+            FILE_NAME=$(echo "$FILE_NAME-$RELEASE_NAME-local" | tr "[:upper:]" "[:lower:]"); \
+            echo $FILE_NAME; \
+            tar --directory={} -czvf $FILE_NAME.tar.gz .;
+            kubectl delete configmap $FILE_NAME --ignore-not-found=true -n $TARGET_NAMESPACE;; \
+            kubectl create configmap $FILE_NAME --from-file=$FILE_NAME.tar.gz -n $TARGET_NAMESPACE;' \;
+          fi
+
 
           # env var substitution
           envsubst < dp-template.yaml > dp-generated.yaml
