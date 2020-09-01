@@ -30,7 +30,7 @@ spec:
         - rrdomain-$RELEASE_NAME-local
   env:
   - name: DATAPOWER_LOG_LEVEL
-    value: "4"
+    value: '4'
   users:
     - accessLevel: privileged
       name: admin
