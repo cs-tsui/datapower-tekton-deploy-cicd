@@ -67,6 +67,7 @@ spec:
           eval "echo \"$(cat dp-template.yaml)\"" > dp-generated.yaml
 
           # Apply the CRD
+          echo ""
           cat dp-generated.yaml
           kubectl apply -f dp-generated.yaml --wait=true
           
