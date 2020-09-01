@@ -34,15 +34,20 @@ spec:
           # Print env for debugging
           env
 
-          READY_STATUS=$(oc get datapowerservice dp-with-storage -o jsonpath='{.status.conditions[0].type}')
+          READY_STATUS="NOT_READY"
+          while [ "$RUNNING_PHASE" != "Running" ]
+          do
+            echo "DataPower Instance NOT Ready."
+            RUNNING_PHASE=$(oc get datapowerservice $RELEASE_NAME -o jsonpath='{.status.phase}' -n $TARGET_NAMESPACE)
+            
+            # Ready can be misleading 
+            # READY_STATUS=$(oc get datapowerservice $RELEASE_NAME -o jsonpath='{.status.conditions[0].type}' -n $TARGET_NAMESPACE)
+            sleep 5
+          done
 
-          if [ "$READY_STATUS" = "$Ready" ]; then
-              echo "DataPower Instance Ready."
-          else
-              echo "DataPower Instance NOT Ready."
-          fi
+          echo "DataPower Instance Ready."
 
-
+          # TODO: check payload itself in addition to return code
           if [[ -e smoke-test.sh ]]; then
             ./smoke-test.sh
           fi

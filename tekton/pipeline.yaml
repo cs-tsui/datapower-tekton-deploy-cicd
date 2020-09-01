@@ -38,6 +38,7 @@ spec:
           - name: input-source
             resource: git-input-source
     - name: smoke-test
+      timeout: "0h5m30s"
       taskRef:
         name: dp-smoke-test
       params:
