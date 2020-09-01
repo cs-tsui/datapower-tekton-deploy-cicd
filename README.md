@@ -41,4 +41,30 @@ tkn pipeline start deploy-dp-pipeline \
 --param DP_WORKSPACE_DIR='dp/basic' \
 --resource git-input-source=git-repo \
 -n dp-pipeline
+
+or the equivalent with oc/kubectl 
+
+cat <<EOF | kubectl create -f -
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  creationTimestamp: null
+  generateName: deploy-dp-pipeline-run-
+  namespace: dp-pipeline
+spec:
+  params:
+  - name: TARGET_NAMESPACE
+    value: dp
+  - name: RELEASE_NAME
+    value: dp-basic
+  - name: DP_WORKSPACE_DIR
+    value: dp/basic
+  pipelineRef:
+    name: deploy-dp-pipeline
+  resources:
+  - name: git-input-source
+    resourceRef:
+      name: git-repo
+  serviceAccountName: dp-deploy-sa
+EOF
 ```
