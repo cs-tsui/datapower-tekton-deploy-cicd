@@ -63,13 +63,13 @@ oc create clusterrolebinding dp-pipelinebuilderinding --clusterrole=system:image
 oc create clusterrolebinding dp-pipelineqmeditbinding --clusterrole=datapowerservices.datapower.ibm.com-v1beta1-edit --serviceaccount=$PIPELINE_NS:$PIPELINE_SA
 oc create clusterrolebinding dp-pipelineqmviewbinding --clusterrole=datapowerservices.datapower.ibm.com-v1beta1-view --serviceaccount=$PIPELINE_NS:$PIPELINE_SA
 
+# TODO: give permission to create route and services explicitly
 oc create rolebinding dp-pipeline-admin --clusterrole=admin --serviceaccount=$PIPELINE_NS:$PIPELINE_SA -n $TARGET_NS
 
 oc create clusterrolebinding dp-pipelineviewerbinding --clusterrole=view --serviceaccount=$PIPELINE_NS:$PIPELINE_SA
 
 # Add the serviceaccount to privileged SecurityContextConstraint
 oc adm policy add-scc-to-user privileged system:serviceaccount:$PIPELINE_NS:$PIPELINE_SA
-
 
 # Add tekton resources
 oc apply -f ./tekton/

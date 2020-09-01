@@ -1,0 +1,65 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: dp-binding-cicd
+spec:
+  params:
+    - name: gitrevision
+      value: $(body.head_commit.id)
+    - name: gitrepositoryurl
+      value: $(body.repository.url)
+    - name: contenttype
+      value: $(header.Content-Type)
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: dp-cicd
+spec:
+  serviceAccountName: dp-deploy-sa
+  triggers:
+    - name: cicd-trig
+      bindings:
+        - ref: binding-cicd
+      template:
+        name: template-cicd
+      interceptors:
+        - cel:
+            filter: "header.match('X-GitHub-Event', 'push') && body.ref == 'refs/heads/master'"
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: dp-template-cicd
+spec:
+  params:
+    - name: gitrevision
+      description: The git revision
+      default: master
+    - name: gitrepositoryurl
+      description: The git repository url
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineRun
+      metadata:
+        generateName: dp-cicd-run-
+      spec:
+        params:
+        - name: TARGET_NAMESPACE
+          value: dp
+        - name: RELEASE_NAME
+          value: dp-basic
+        - name: DP_WORKSPACE_DIR
+          value: dp/basic
+        pipelineRef:
+          name: deploy-dp-pipeline
+        resources:
+        - name: git-input-source
+          resourceSpec:
+            type: git
+            params:
+              - name: revision
+                value: $(params.gitrevision)
+              - name: url
+                value: $(params.gitrepositoryurl)
+        serviceAccountName: dp-deploy-sa
