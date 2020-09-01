@@ -34,7 +34,7 @@ spec:
           # Print env for debugging
           env
 
-          READY_STATUS="NOT_READY"
+          RUNNING_PHASE="NOT_READY"
           while [ "$RUNNING_PHASE" != "Running" ]
           do
             echo "DataPower Instance NOT Ready."
