@@ -42,7 +42,7 @@ spec:
             
             # Ready can be misleading 
             # READY_STATUS=$(oc get datapowerservice $RELEASE_NAME -o jsonpath='{.status.conditions[0].type}' -n $TARGET_NAMESPACE)
-            sleep 5
+            sleep 10
           done
 
           echo "DataPower Instance Ready."
