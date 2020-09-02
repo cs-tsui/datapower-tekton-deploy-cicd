@@ -47,6 +47,9 @@ spec:
 
           echo "DataPower Instance Ready."
 
+          # Give it some time to load
+          sleep 30
+
           # TODO: check payload itself in addition to return code
           if [[ -e smoke-test.sh ]]; then
             ./smoke-test.sh
