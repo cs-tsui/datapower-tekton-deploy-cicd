@@ -18,7 +18,6 @@ spec:
     dpApp:
       config:
       - "auto-startup-$RELEASE_NAME-cfg"
-      - "web-enable-$RELEASE_NAME-cfg"
   - name: "RRdomain"
     certs:
       - certType: usrcerts

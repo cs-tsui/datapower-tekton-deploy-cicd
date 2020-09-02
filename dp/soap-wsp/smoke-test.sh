@@ -29,6 +29,7 @@ do
       echo "Sleeping 20 and try again"
       sleep 20
   fi
+  
 done
 
 # > response.txt

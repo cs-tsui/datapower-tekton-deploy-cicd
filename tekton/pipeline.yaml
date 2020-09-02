@@ -14,9 +14,12 @@ spec:
       description: Location containing configurations
       type: string
       default: dp/basic
-    - name: PVC_SC
+    - name: ENV
       type: string
-      default: ibmc-block-gold
+      default: dev
+    - name: FIND
+      type: string
+      default: ''
   resources:
     - name: git-input-source
       type: git
@@ -31,8 +34,10 @@ spec:
           value: $(params.TARGET_NAMESPACE)
         - name: DP_WORKSPACE_DIR
           value: $(params.DP_WORKSPACE_DIR)
-        - name: PVC_SC
-          value: $(params.PVC_SC)
+        - name: ENV
+          value: $(params.ENV)
+        - name: FIND
+          value: $(params.FIND)
       resources:
         inputs:
           - name: input-source

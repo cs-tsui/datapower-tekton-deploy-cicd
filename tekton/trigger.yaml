@@ -20,7 +20,9 @@ spec:
   triggers:
     - name: cicd-trig
       bindings:
-        - ref: dp-binding-cicd
+      - name: dp-binding-cicd
+      # some tekton version will complain about "name" or "ref"
+      #   - ref: dp-binding-cicd
       template:
         name: dp-template-cicd
       interceptors:
