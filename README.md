@@ -30,7 +30,50 @@ Tekton assets for deploying an instance of the operator based DataPower V10.
     ./pipeline-setup.sh dp-deploy-sa dp-pipeline dp
     ```
 
-## Run
+* (Optional) If you called your service account with a name different than `dp-deploy-sa`, be sure to update it in the `./tekton/trigger.yaml` file. Also, you may want to change the pipeline `TriggerTemplate` with the service account name, or deploy a different configuration subdirectory.
+
+    ```
+
+    ...
+    kind: EventListener
+    metadata:
+      name: dp-cicd
+    spec:
+      serviceAccountName: dp-deploy-sa
+    ...
+
+    and 
+
+    ...
+    resourcetemplates:
+      - apiVersion: tekton.dev/v1alpha1
+        kind: PipelineRun
+        metadata:
+          generateName: dp-cicd-run-
+        spec:
+          params:
+          - name: TARGET_NAMESPACE
+            value: dp
+          - name: RELEASE_NAME
+            value: dp-basic
+          - name: DP_WORKSPACE_DIR
+            value: dp/basic
+          pipelineRef:
+            name: deploy-dp-pipeline
+          resources:
+          - name: git-input-source
+            resourceSpec:
+              type: git
+              params:
+                - name: revision
+                  value: $(params.gitrevision)
+                - name: url
+                  value: $(params.gitrepositoryurl)
+          serviceAccountName: dp-deploy-sa
+    ...
+    ```
+  
+## Start Run
 
 ```
 # Start a pipeline run to deploy and pass in custom configuration parameters 
