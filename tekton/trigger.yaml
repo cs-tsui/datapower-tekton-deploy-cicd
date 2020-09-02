@@ -50,9 +50,9 @@ spec:
         - name: TARGET_NAMESPACE
           value: dp
         - name: RELEASE_NAME
-          value: dp-basic
+          value: dp-soap-pipe
         - name: DP_WORKSPACE_DIR
-          value: dp/basic
+          value: dp/soap-wsp
         pipelineRef:
           name: deploy-dp-pipeline
         resources:
