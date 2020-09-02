@@ -59,7 +59,10 @@ spec:
     - name: calchttps
       protocol: TCP
       port: 7043
-      targetPort: 7043
+    - name: calchttp8000
+      protocol: TCP
+      port: 8000
+      targetPort: 8000
 ---
 kind: Route
 apiVersion: route.openshift.io/v1
@@ -115,3 +118,19 @@ spec:
     weight: 100
   port:
     targetPort: 8081
+---
+### Calculator HTTP route
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: $RELEASE_NAME-calc-http8000
+  namespace: $TARGET_NAMESPACE
+  labels:
+    dp-pipeline: $RELEASE_NAME
+spec:
+  to:
+    kind: Service
+    name: $RELEASE_NAME-web-svc
+    weight: 100
+  port:
+    targetPort: 8000
