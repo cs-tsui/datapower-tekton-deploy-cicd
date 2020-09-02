@@ -53,7 +53,7 @@ secrets:
 - name: $GIT_SECRET_NAME
 EOF
 
-# Create these ClusterRoleBindings
+# Create these ClusterRoleBindings for the pipeline service account
 oc create clusterrolebinding dp-pipelinetektonpipelinesadminbinding --clusterrole=tekton-pipelines-admin --serviceaccount=$PIPELINE_NS:$PIPELINE_SA
 oc create clusterrolebinding dp-pipelinetektontriggersadminbinding --clusterrole=tekton-triggers-admin --serviceaccount=$PIPELINE_NS:$PIPELINE_SA
 
@@ -64,12 +64,16 @@ oc create clusterrolebinding dp-pipelineqmeditbinding --clusterrole=datapowerser
 oc create clusterrolebinding dp-pipelineqmviewbinding --clusterrole=datapowerservices.datapower.ibm.com-v1beta1-view --serviceaccount=$PIPELINE_NS:$PIPELINE_SA
 
 # TODO: give permission to create route and services explicitly
-oc create rolebinding dp-pipeline-admin --clusterrole=admin --serviceaccount=$PIPELINE_NS:$PIPELINE_SA -n $TARGET_NS
+# oc create rolebinding dp-pipeline-admin --clusterrole=admin --serviceaccount=$PIPELINE_NS:$PIPELINE_SA -n $TARGET_NS
+
+# Add ability to create routes
+oc create clusterrole routes-admin --verb=* --resource=routes
+oc create clusterrolebinding "$SA_NAME"_pipeline_cr_routes-admin --clusterrole=routes-admin --serviceaccount=$PIPELINE_NS:$PIPELINE_SA;
 
 oc create clusterrolebinding dp-pipelineviewerbinding --clusterrole=view --serviceaccount=$PIPELINE_NS:$PIPELINE_SA
 
 # Add the serviceaccount to privileged SecurityContextConstraint
-oc adm policy add-scc-to-user privileged system:serviceaccount:$PIPELINE_NS:$PIPELINE_SA
+# oc adm policy add-scc-to-user privileged system:serviceaccount:$PIPELINE_NS:$PIPELINE_SA 
 
 # Add tekton resources
 oc apply -f ./tekton/
