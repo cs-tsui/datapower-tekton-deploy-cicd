@@ -4,7 +4,7 @@ Tekton assets for deploying an instance of the operator based DataPower V10.
 
 ## Setup Pipeline
 
-* Log into Openshift as user with ability to create related pipeline resources (admin user)
+* Use `oc` to log into Openshift as user with ability to create related pipeline, secrets, routes, rolebindings, and other resources (e.g. cluster-admin user)
 
 * Edit pipeline-setup.sh and fill in required variables
     ```
