@@ -28,7 +28,9 @@ Tekton assets for deploying an instance of the operator based DataPower V10.
     
     ./pipeline-setup.sh dp-deploy-sa dp-pipeline dp
     ```
-* The trigger route needs to be created for the event listener service, and the new route will need to be added to Github webhooks to receive push events
+* The trigger route needs to be added to Github webhooks to receive push events. Run the following command to get the route for the event listener thats created as part of the `tekton/trigger.yaml`, then consult your Git repo documentation for adding the webhook to your repo.
+    
+    `oc get route trigger-el -n dp-pipeline -o jsonpath='{.spec.host}'`
 
 * (Optional) If you called your service account with a name different than `dp-deploy-sa`, be sure to update it in the `./tekton/trigger.yaml` file. Also, you may want to change the pipeline `TriggerTemplate` with the service account name, or deploy a different configuration subdirectory.
 
