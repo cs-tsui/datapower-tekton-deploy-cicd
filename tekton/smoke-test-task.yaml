@@ -50,7 +50,7 @@ spec:
           # Give it some time to load
           sleep 30
 
-          # TODO: check payload itself in addition to return code
           if [[ -e smoke-test.sh ]]; then
+            echo 'Found smoke test script'
             ./smoke-test.sh
           fi

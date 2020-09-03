@@ -38,6 +38,10 @@ spec:
           value: $(params.FIND)
       script: |
           set -e
+         
+          # multiple ways of replacing values in cfg
+          # one way is to mapping file, have this in repo
+          # check ENV paramter, and replace
 
           # TEXT REPLACEMENT LOGIC GOES HERE
           # comma delimited list of k/v pairs,
