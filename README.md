@@ -1,7 +1,6 @@
 ## Datapower V10 Tekton Deployment
 Tekton assets for deploying an instance of the operator based DataPower V10.
 
-
 ## Setup Pipeline
 
 * Use `oc` to log into Openshift as user with ability to create related pipeline, secrets, routes, rolebindings, and other resources (e.g. cluster-admin user)
