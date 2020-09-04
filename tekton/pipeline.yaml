@@ -7,11 +7,13 @@ spec:
     - name: RELEASE_NAME
       type: string
       default: dp-release
+      description: Name of the DataPowerService
     - name: TARGET_NAMESPACE
       type: string
       default: dp-test
+      description: Target namesapce to deploy DataPowerService
     - name: DP_WORKSPACE_DIR
-      description: Location containing configurations
+      description: Location containing configurations (e.g. dp/basic)
       type: string
       default: dp/basic
     - name: ENV
@@ -19,7 +21,8 @@ spec:
       default: dev
     - name: FIND
       type: string
-      default: ''
+      description: "Find and replace text in .cfg files. Format is <find1,replace1;find2,replace2>. Example: domain1.com,domain2.com;"
+      default: 'OPTIONAL'
   resources:
     - name: git-input-source
       type: git

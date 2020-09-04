@@ -46,10 +46,13 @@ spec:
           # TEXT REPLACEMENT LOGIC GOES HERE
           # comma delimited list of k/v pairs,
           # each k/v pair is separated by ;
-          echo $FIND | while IFS=',' read -d';' i j; do 
-              echo "$i and $j";
-              find . -name '*.cfg' -exec sed -i "s|$i|$j|g" {} \;
-          done
+          # Ending ; is required
+          if [[ $FIND != 'OPTIONAL' ]]; then
+            echo $FIND | while IFS=',' read -d';' i j; do 
+                echo "$i and $j";
+                find . -name '*.cfg' -exec sed -i "s|$i|$j|g" {} \;
+            done
+          fi
 
           # Print env for debugging
           env
